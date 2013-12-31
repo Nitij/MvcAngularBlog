@@ -1,0 +1,14 @@
+﻿<div id="container">
+    <ul>
+        <li ng-repeat="article in articles">
+            <span style="color: red;">{{GetDateTime(article.CreateDate)}}</span><br />
+            <span style="font-weight: 700;">
+                <a ng-href='#/articles-detail/{{article.ID}}'>{{article.Title}}</a>
+            </span>
+            <br />
+            {{article.Description}} <a ng-href='#/articles-detail/{{article.ID}}'>(Read More)</a>
+            <br />
+            <br />
+        </li>
+    </ul>
+</div>

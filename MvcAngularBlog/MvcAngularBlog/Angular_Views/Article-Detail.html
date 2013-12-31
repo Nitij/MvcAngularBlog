@@ -1,0 +1,56 @@
+﻿<div id="container">
+    <div id="divArticle">
+        <span style="color: red;">{{GetDateTime(article.CreateDate)}}</span>
+        <br />
+        <span style="font-weight: 700; font-size: x-large">{{article.Title}}</span>
+        <br />
+        {{article.Description}}
+        <br />
+        <!-- 'ng-bind-html' is to show html content -->
+        <span ng-bind-html="article.Data"></span>
+    </div>
+    <div id="divShowComments">
+        <a href="" onclick="ShowHideCommentSection(); return false;"><span id="spanCommentsLink">Show Comments</span></a>
+    </div>
+    <div id="divCommentsSection" style="display: none;">
+        <div id="divAddComment">
+            <label for="txtName">Your Name: </label>
+            <input type="text" id="txtName" ng-model="name" />
+            <label for="txtEmail">Your Email(<i>this will be hidden, we promise!</i>): </label>
+            <input type="text" id="txtEmail" ng-model="email" /><br />
+            <textarea id="txtComment" cols="80" rows="6" ng-model="comment"></textarea>
+            <br />
+            <a href="" ng-click="AddNewComment()">Add Comment</a>
+        </div>
+        <div id="divComments">
+            <table>
+                <tr ng-repeat="c in comments">
+                    <td>
+                        {{c.Name}} at {{c.CreateDate}} said:
+                        <hr />
+                        {{c.Comment}}
+                        <br /><br />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    //function to hide and show comments section
+    function ShowHideCommentSection() {
+        var $commentSection = $('#divCommentsSection');
+        var $spanCommentsLink = $('#spanCommentsLink');
+        var commentDisplayStyle = $commentSection.css('display');
+        if (commentDisplayStyle === 'block') {
+            $spanCommentsLink.html('Show Comments');
+            $commentSection.hide(400);
+            return;
+        }
+        if (commentDisplayStyle === 'none') {
+            $spanCommentsLink.html('Hide Comments');
+            $commentSection.show(400);
+            return;
+        }
+    }
+</script>

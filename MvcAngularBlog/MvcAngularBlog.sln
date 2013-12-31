@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcAngularBlog", "MvcAngularBlog\MvcAngularBlog.csproj", "{1AD49073-BC2E-4888-904D-D17E583E1068}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcAngularBlog.Tests", "MvcAngularBlog.Tests\MvcAngularBlog.Tests.csproj", "{F53B6390-2FCC-4F37-8110-E6F7788DEEE7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{21A0EA83-3B19-4415-A670-66A118DC1E83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{3F48DE2E-F797-496E-8F0D-802A84C5B49C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1AD49073-BC2E-4888-904D-D17E583E1068}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AD49073-BC2E-4888-904D-D17E583E1068}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AD49073-BC2E-4888-904D-D17E583E1068}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AD49073-BC2E-4888-904D-D17E583E1068}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F53B6390-2FCC-4F37-8110-E6F7788DEEE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F53B6390-2FCC-4F37-8110-E6F7788DEEE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F53B6390-2FCC-4F37-8110-E6F7788DEEE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F53B6390-2FCC-4F37-8110-E6F7788DEEE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21A0EA83-3B19-4415-A670-66A118DC1E83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21A0EA83-3B19-4415-A670-66A118DC1E83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21A0EA83-3B19-4415-A670-66A118DC1E83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21A0EA83-3B19-4415-A670-66A118DC1E83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F48DE2E-F797-496E-8F0D-802A84C5B49C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F48DE2E-F797-496E-8F0D-802A84C5B49C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F48DE2E-F797-496E-8F0D-802A84C5B49C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F48DE2E-F797-496E-8F0D-802A84C5B49C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,5 @@
+D:\Nitij\projects\MvcAngularBlog\MvcAngularBlog\Shared\bin\Debug\Shared.dll
+D:\Nitij\projects\MvcAngularBlog\MvcAngularBlog\Shared\bin\Debug\Shared.pdb
+D:\Nitij\projects\MvcAngularBlog\MvcAngularBlog\Shared\obj\Debug\Shared.csprojResolveAssemblyReference.cache
+D:\Nitij\projects\MvcAngularBlog\MvcAngularBlog\Shared\obj\Debug\Shared.dll
+D:\Nitij\projects\MvcAngularBlog\MvcAngularBlog\Shared\obj\Debug\Shared.pdb
