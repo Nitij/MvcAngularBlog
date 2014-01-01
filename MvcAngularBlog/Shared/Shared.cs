@@ -34,7 +34,8 @@ namespace Shared
                 {GetArticleTags, OperationText.GetArticleTags},
                 {GetAllTags, OperationText.GetAllTags},
                 {GetArticlesByTagName, OperationText.GetArticlesByTagName},
-                {GetArticleDates, OperationText.GetArticleDates}
+                {GetArticleDates, OperationText.GetArticleDates},
+				{GetArticlesByDateRange, OperationText.GetArticlesByDateRange}
             };
 
         public const String ReadAllArticles = "ReadAllArticles";
@@ -57,6 +58,7 @@ namespace Shared
         public const String GetAllTags = "GetAllTags";
         public const String GetArticlesByTagName = "GetArticlesByTagName";
         public const String GetArticleDates = "GetArticleDates";
+        public const String GetArticlesByDateRange = "GetArticlesByDateRange";
     }
 
     /// <summary>
@@ -116,7 +118,7 @@ namespace Shared
         /// <summary>
         /// Update Article By Id
         /// </summary>
-        public const String UpdateArticleById = "UPDATE tbl_Article SET Article_Title=@title, Article_Description=@description, Article_Data=@data" + 
+        public const String UpdateArticleById = "UPDATE tbl_Article SET Article_Title=@title, Article_Description=@description, Article_Data=@data" +
                                                 " WHERE ID=@articleId";
 
         /// <summary>
@@ -183,12 +185,21 @@ namespace Shared
                                                     "a.Create_Date as 'CreateDate' from tbl_Article as a " +
                                                     "INNER JOIN tblUserArticle ua on ua.ArticleID = a.ID " +
                                                     "INNER JOIN UserProfile u on u.UserId = ua.UserID " +
-												    "INNER JOIN tblTagArticle ta on ta.ArticleId = a.ID " +
+                                                    "INNER JOIN tblTagArticle ta on ta.ArticleId = a.ID " +
                                                     "WHERE ta.TagName = @tagName ORDER BY a.Create_Date DESC";
 
         /// <summary>
         /// Get Article Dates
         /// </summary>
         public const String GetArticleDates = "SELECT Create_Date FROM tbl_Article ORDER BY Create_Date DESC";
+
+        /// <summary>
+        /// Get Articles By Date Range
+        /// </summary>
+        public const String GetArticlesByDateRange = "SELECT a.ID, u.UserId as 'UserId', u.UserName as 'UserName', a.Article_Title as 'Title', a.Article_Description as 'Description'," +
+                                                "a.Article_Data as 'Data', a.Create_Date as 'CreateDate' from tbl_Article as a" +
+                                                " INNER JOIN tblUserArticle ua on ua.ArticleID = a.ID" +
+                                                " INNER JOIN UserProfile u on u.UserId = ua.UserID" +
+                                                " WHERE (a.Create_Date >= @startDate AND a.Create_Date < @endDate)";
     }
 }

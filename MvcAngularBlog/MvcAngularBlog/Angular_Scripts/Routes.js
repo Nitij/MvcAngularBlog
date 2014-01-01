@@ -13,7 +13,7 @@ blogApp.config(['$routeProvider', function ($routeProvider) {
         templateUrl: '../Angular_Views/Article-Tag.html',
         controller: 'ArticleTagCtrl'
     });
-    $routeProvider.when('/articles-tag/:tagName', {
+    $routeProvider.when('/articles-archive/:year/:month', {
         templateUrl: '../Angular_Views/Article-Archive.html',
         controller: 'ArticleArchiveCtrl'
     });

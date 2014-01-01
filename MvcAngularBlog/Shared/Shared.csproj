@@ -42,6 +42,7 @@
     <Compile Include="Models\ArticleComment.cs" />
     <Compile Include="Models\BlogUser.cs" />
     <Compile Include="Models\BlogTag.cs" />
+    <Compile Include="Models\ArchiveDate.cs" />
     <Compile Include="Shared.cs" />
     <Compile Include="Models\BlogArticle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

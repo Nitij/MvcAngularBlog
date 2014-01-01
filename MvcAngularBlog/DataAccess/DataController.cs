@@ -75,6 +75,9 @@ namespace DataAccess
                     case OperationType.GetArticleDates:
                         retVal = manager.GetArticleDates();
                         break;
+                    case OperationType.GetArticlesByDateRange:
+                        retVal = manager.ReadArticleByDateRange(data);
+                        break;
                     default:
                         break;
                 }

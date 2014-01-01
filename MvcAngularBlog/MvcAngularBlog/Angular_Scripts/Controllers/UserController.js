@@ -1,6 +1,7 @@
 ﻿;
 
-blogApp.controller('UserCtrl', function ($scope, $routeParams, BlogArticleService, BlogUserService) {
+blogApp.controller('UserCtrl', ['$scope', '$routeParams', 'BlogArticleService', 'BlogUserService',
+    function ($scope, $routeParams, BlogArticleService, BlogUserService) {
     $scope.articles = [];
     $scope.currentArticle = {};
     $scope.currentUser = {};
@@ -112,4 +113,4 @@ blogApp.controller('UserCtrl', function ($scope, $routeParams, BlogArticleServic
         $scope.editMode = true;
         $scope.opType = "Create";
     }
-});
+}]);

@@ -20,8 +20,8 @@
                 <div ng-controller="ArchiveCtrl">
                     <span style="font-weight:800">Archive: </span>
                     <br />
-                    <span ng-repeat="archive in archiveItems">
-                        <a ng-href='#/articles-tag/{{tag.TagName}}'">{{archive.Month}} {{archive.Year}}({{archive.ArticleCount}})</a>
+                    <span ng-repeat="archive in archiveList">
+                        <a ng-href='#/articles-archive/{{archive.Year}}/{{archive.Month}}'">{{archive.MonthString}} {{archive.Year}}({{archive.ArticleCount}})</a>
                         <br />
                     </span>
                 </div>

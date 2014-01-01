@@ -1,6 +1,7 @@
 ﻿;
 
-blogApp.controller('MainCtrl', function ($scope, BlogArticleService, HelperService) {
+blogApp.controller('MainCtrl', ['$scope', 'BlogArticleService', 'HelperService',
+    function ($scope, BlogArticleService, HelperService) {
     $scope.articles = [];
     $scope.GetDateTime = HelperService.GetDateTime;
 
@@ -8,4 +9,4 @@ blogApp.controller('MainCtrl', function ($scope, BlogArticleService, HelperServi
     //into this controller
     BlogArticleService.GetData(BlogArticleService.OperationType.GetAllArticles).
         then(function (args) { $scope.articles = args.data; });
-});
+}]);

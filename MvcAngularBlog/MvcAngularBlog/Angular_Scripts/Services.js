@@ -252,7 +252,7 @@ blogApp.factory("HelperService", function () {
     }
 
     //Returns month string from raw date
-    function GetMonthFromRawDateFunc(date) {
+    function GetMonthStringFromRawDateFunc(date) {
         var date = new Date(date);
         return GetMonthString(date.getMonth());
     }
@@ -263,9 +263,16 @@ blogApp.factory("HelperService", function () {
         return date.getFullYear();
     }
 
+    //Returns the month value from raw date
+    function GetMonthFromRawDateFunc(date) {
+        var date = new Date(date);
+        return date.getMonth() + 1;
+    }
+
     return {
         GetDateTime: GetDateTimeFunc,
         GetMonthFromRawDate: GetMonthFromRawDateFunc,
+        GetMonthStringFromRawDate: GetMonthStringFromRawDateFunc,
         GetYearFromRawDate: GetYearFromRawDateFunc
     };
 });
@@ -273,7 +280,8 @@ blogApp.factory("HelperService", function () {
 //Service for Archive
 blogApp.factory("ArchiveService", function ($http, $q, $templateCache) {
     var OpType = {
-        GetArticleDates: 1
+        GetArticleDates: 1,
+        GetArticlesByDateRange: 2
     };
     var execute = function (operation, data) {
         var deferred = $q.defer();
@@ -281,6 +289,17 @@ blogApp.factory("ArchiveService", function ($http, $q, $templateCache) {
             deferred.resolve($http({
                 method: 'GET',
                 url: '/api/Archive/',
+                cache: $templateCache
+            }));
+            return deferred.promise;
+        }
+        else if (operation === OpType.GetArticlesByDateRange) {
+            deferred.resolve($http({
+                method: 'POST',
+                url: '/api/Archive/',
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
                 cache: $templateCache
             }));
             return deferred.promise;

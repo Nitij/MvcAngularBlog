@@ -1,8 +1,9 @@
 ﻿;
 
-blogApp.controller('ArchiveCtrl', function ($scope, ArchiveService, HelperService) {
+blogApp.controller('ArchiveCtrl', ['$scope', 'ArchiveService', 'HelperService', function ($scope, ArchiveService, HelperService) {
     var tempArchiveList = [],
-        archive = function (month, year, articleCount) {
+        archive = function (monthString, month, year, articleCount) {
+            this.MonthString = monthString;
             this.Month = month;
             this.Year = year;
             this.ArticleCount = articleCount;
@@ -10,25 +11,42 @@ blogApp.controller('ArchiveCtrl', function ($scope, ArchiveService, HelperServic
         i = 0,
         rawDate,
         month,
+        monthValue,
         year,
-        articleCount = 1;
+        previousMonth,
+        previousYear,
+        articleCount = 0;
     $scope.archiveList = []; //{Month, Year, ArticleCount}
 
     //lets get all the tags
     ArchiveService.Execute(ArchiveService.OperationType.GetArticleDates).
         then(function (args) {
             tempArchiveList = args.data;
-
             //now lets convert that archive list into meaningful information
-            for (; i < tempArchiveList.length; i++) {
-                rawDate = tempArchiveList[i];
-                month = HelperService.GetMonthFromRawDate(rawDate);
-                year = HelperService.GetYearFromRawDate(rawDate);
-                $scope.archiveList.push(new archive(month, year, articleCount++));
+            if (tempArchiveList.length) {
+                rawDate = tempArchiveList[0];
+                previousMonth = HelperService.GetMonthStringFromRawDate(rawDate);
+                monthValue = HelperService.GetMonthFromRawDate(rawDate);
+                previousYear = HelperService.GetYearFromRawDate(rawDate);
 
-                //reset article count
-                articleCount = 1;
+                tempArchiveList.forEach(function (obj) {
+                    rawDate = obj;
+                    month = HelperService.GetMonthStringFromRawDate(rawDate);
+                    year = HelperService.GetYearFromRawDate(rawDate);
+                    if ((month === previousMonth) && (year === previousYear)) {
+                        articleCount++;
+                    }
+                    else {
+                        $scope.archiveList.push(new archive(previousMonth, monthValue, previousYear, articleCount));
+                        articleCount = 1;
+                    }
+                    previousMonth = month;
+                    previousYear = year;
+                    monthValue = HelperService.GetMonthFromRawDate(rawDate);
+                });
+                //we need to add the last item also
+                if (articleCount > 0)
+                    $scope.archiveList.push(new archive(previousMonth, monthValue, previousYear, articleCount));
             }
-            debugger;
         });
-});
+}]);

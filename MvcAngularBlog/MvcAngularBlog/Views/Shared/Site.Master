@@ -22,13 +22,12 @@
                     <section id="login">
                         <%: Html.Partial("_LoginPartial") %>
                     </section>
-                    <nav>
-                        <ul id="menu">
-                            <li><%: Html.ActionLink("Home", "Index", "Home") %></li>
-                            <li><%: Html.ActionLink("About", "About", "Home") %></li>
-                            <li><%: Html.ActionLink("Contact", "Contact", "Home") %></li>
-                        </ul>
-                    </nav>
+                    <a class= "NavLinkButton" href="/">Home</a>
+                    <a class= "NavLinkButton" href="/home/about">About</a>
+                    <a class= "NavLinkButton" href="/Home/contact">Contact</a>
+                    <%--<%: Html.ActionLink("Home", "Index", "Home") %>--%>
+                    <%--<%: Html.ActionLink("About", "About", "Home") %>--%>
+                    <%--<%: Html.ActionLink("Contact", "Contact", "Home") %>--%>
                 </div>
             </div>
         </header>

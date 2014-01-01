@@ -70,6 +70,27 @@ namespace MvcAngularBlog.Models
         }
 
         /// <summary>
+        /// Returns all articles which have their create date in a given range
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public IEnumerable<BlogArticle> GetArticlesByDateRange(ArchiveDate archiveDate)
+        {
+            List<BlogArticle> articles;
+            Boolean endDateIsInNextYear = Convert.ToInt32(archiveDate.Month) == 12;
+            DateTime startDate = DateTime.Parse(archiveDate.Month.ToString() + "/1/" + archiveDate.Year.ToString());
+            String endMonth = ((!endDateIsInNextYear) ? (Convert.ToInt32(archiveDate.Month) + 1).ToString() : "1");
+            String endYear = ((!endDateIsInNextYear) ? archiveDate.Year.ToString() : (Convert.ToInt32(archiveDate.Year) + 1).ToString());
+            DateTime endDate = DateTime.Parse(endMonth + "/1/" + endYear);
+            operationParams.Clear();
+            operationParams.Add("startDate", startDate);
+            operationParams.Add("endDate", endDate);
+            articles = dataController.ExecuteOperation(OperationType.GetArticlesByDateRange, operationParams) as List<BlogArticle>;
+
+            return articles;
+        }
+
+        /// <summary>
         /// Get all articles created by a particular user
         /// </summary>
         /// <param name="id"></param>

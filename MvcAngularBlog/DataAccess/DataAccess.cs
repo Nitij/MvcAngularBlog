@@ -152,6 +152,40 @@ namespace DataAccess
         #region Articles
 
         /// <summary>
+        /// Returns all articles which have their create date in a given range
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public List<BlogArticle> ReadArticleByDateRange(Dictionary<String, Object> data)
+        {
+            BlogArticle articleModel;
+            List<BlogArticle> returnData = new List<BlogArticle>();
+            SqlDataReader dataReader;
+            SqlCommand command = GetCommand(OperationType.GetArticlesByDateRange);
+            DateTime startDate = DateTime.Parse(data["startDate"].ToString());
+            DateTime endDate = DateTime.Parse(data["endDate"].ToString());
+
+            command.Parameters.Add(GetParameter("@startDate", startDate, DbType.String));
+            command.Parameters.Add(GetParameter("@endDate", endDate, DbType.String));
+            dataReader = command.ExecuteReader();
+
+            while (dataReader.Read())
+            {
+                articleModel = GetBlogArticle((Int32)dataReader["ID"],
+                                Convert.ToInt32(dataReader["UserId"]),
+                                dataReader["UserName"].ToString(),
+                                dataReader["Title"].ToString(),
+                                dataReader["Description"].ToString(),
+                                dataReader["Data"].ToString(),
+                                Convert.ToDateTime(dataReader["CreateDate"]),
+                                String.Join(",", GetArticleTags((Int32)dataReader["ID"]).ToArray()));
+                returnData.Add(articleModel);
+            }
+            CloseConnection(command.Connection);
+            return returnData;
+        }
+
+        /// <summary>
         /// Retruns all the create dates of all articles in a list format
         /// </summary>
         /// <returns></returns>
@@ -209,7 +243,7 @@ namespace DataAccess
             //Now we need to add any tag which does not already exist in the DB
             //code to convert comma separated string to list
             //http://stackoverflow.com/questions/910119/how-to-create-a-listt-from-a-comma-separated-string
-            if(tags.Length > 0)
+            if (tags.Length > 0)
                 tagList.AddRange(tags.Split(',').Select(i => i));
 
             //make sure we have distinct tags

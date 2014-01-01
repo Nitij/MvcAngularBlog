@@ -1,6 +1,7 @@
 ﻿;
 
-blogApp.controller('ArticleCtrl', function ($scope, $routeParams, $sce, BlogArticleService, BlogCommentsService, HelperService) {
+blogApp.controller('ArticleCtrl', ['$scope', '$routeParams', '$sce', 'BlogArticleService', 'BlogCommentsService', 'HelperService',
+    function ($scope, $routeParams, $sce, BlogArticleService, BlogCommentsService, HelperService) {
     $scope.GetDateTime = HelperService.GetDateTime;
     $scope.articleId = $routeParams.articleId;
     $scope.article = {};
@@ -56,4 +57,4 @@ blogApp.controller('ArticleCtrl', function ($scope, $routeParams, $sce, BlogArti
         then(function (args) {
             $scope.comments = args.data;
         });
-});
+}]);
