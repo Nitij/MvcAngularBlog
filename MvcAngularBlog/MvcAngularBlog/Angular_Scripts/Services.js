@@ -173,17 +173,17 @@ blogApp.factory("TagService", function ($http, $q, $templateCache) {
 //Service for miscelleneous helper functions which need to be shared across controllers
 blogApp.factory("HelperService", function () {
     //Convert raw date data into meaningful date and time representation
-    function GetDateTimeFunc(data) {
+    function GetDateTimeFunc (data) {
         var date = new Date(Date.parse(data));
         var weekDay = GetWeekDayString(date.getDay());
         var month = GetMonthString(date.getMonth());
         var ampm = date.getHours() >= 12 ? 'PM' : 'AM';
-        return weekDay + " " + date.getDate() + " " + month + ", " +
+        return weekDay + " " + date.getDate() + ", " + month + " " +
             date.getFullYear() + ", " + date.getHours() + ":" + date.getMinutes() + " " + ampm;
     }
 
     //Returns the month string
-    function GetMonthString(month) {
+    function GetMonthString (month) {
         switch (month) {
             case 0:
                 return 'January';
@@ -225,7 +225,7 @@ blogApp.factory("HelperService", function () {
     }
 
     //Returns the week day string
-    function GetWeekDayString(day) {
+    function GetWeekDayString (day) {
         switch (day) {
             case 0:
                 return 'Sunday';
@@ -252,28 +252,36 @@ blogApp.factory("HelperService", function () {
     }
 
     //Returns month string from raw date
-    function GetMonthStringFromRawDateFunc(date) {
+    function GetMonthStringFromRawDateFunc (date) {
         var date = new Date(date);
         return GetMonthString(date.getMonth());
     }
 
     //Returns year string from raw date
-    function GetYearFromRawDateFunc(date) {
+    function GetYearFromRawDateFunc (date) {
         var date = new Date(date);
         return date.getFullYear();
     }
 
     //Returns the month value from raw date
-    function GetMonthFromRawDateFunc(date) {
+    function GetMonthFromRawDateFunc (date) {
         var date = new Date(date);
         return date.getMonth() + 1;
+    }
+
+    //Returns date from raw date
+    function GetDayFromRawDateFunc (date) {
+        var date = new Date(date);
+        return date.getDate();
     }
 
     return {
         GetDateTime: GetDateTimeFunc,
         GetMonthFromRawDate: GetMonthFromRawDateFunc,
         GetMonthStringFromRawDate: GetMonthStringFromRawDateFunc,
-        GetYearFromRawDate: GetYearFromRawDateFunc
+        GetYearFromRawDate: GetYearFromRawDateFunc,
+        GetYearFromRawDate: GetYearFromRawDateFunc,
+        GetDayFromRawDate: GetDayFromRawDateFunc
     };
 });
 

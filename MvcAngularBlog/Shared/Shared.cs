@@ -77,7 +77,7 @@ namespace Shared
         /// <summary>
         /// Read All Articles
         /// </summary>
-        public const String ReadAllArticles = "SELECT * FROM tbl_Article";
+        public const String ReadAllArticles = "SELECT * FROM tbl_Article ORDER BY Create_Date desc";
 
         /// <summary>
         /// Read Article By Id
