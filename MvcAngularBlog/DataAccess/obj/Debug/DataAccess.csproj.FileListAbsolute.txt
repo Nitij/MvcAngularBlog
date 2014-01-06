@@ -1,7 +1,0 @@
-D:\Nitij\projects\MvcAngularBlog\MvcAngularBlog\DataAccess\obj\Debug\DataAccess.csprojResolveAssemblyReference.cache
-D:\Nitij\projects\MvcAngularBlog\MvcAngularBlog\DataAccess\bin\Debug\DataAccess.dll
-D:\Nitij\projects\MvcAngularBlog\MvcAngularBlog\DataAccess\bin\Debug\DataAccess.pdb
-D:\Nitij\projects\MvcAngularBlog\MvcAngularBlog\DataAccess\bin\Debug\Shared.dll
-D:\Nitij\projects\MvcAngularBlog\MvcAngularBlog\DataAccess\bin\Debug\Shared.pdb
-D:\Nitij\projects\MvcAngularBlog\MvcAngularBlog\DataAccess\obj\Debug\DataAccess.dll
-D:\Nitij\projects\MvcAngularBlog\MvcAngularBlog\DataAccess\obj\Debug\DataAccess.pdb
