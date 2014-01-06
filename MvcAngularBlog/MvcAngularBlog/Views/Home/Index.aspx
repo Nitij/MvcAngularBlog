@@ -5,7 +5,7 @@
 <asp:Content ID="indexContent" ContentPlaceHolderID="MainContent" runat="server">
     <table style="width: 100%;">
         <tr>
-            <td style="width: 70%;">
+            <td style="width: 70%;vertical-align:top;">
                 <div ng-view></div>
             </td>
             <td style="width: 70%; vertical-align: top;">
@@ -25,10 +25,14 @@
                 <div ng-controller="ArchiveCtrl">
                     <span style="font-weight: 800">Archive: </span>
                     <br />
-                    <span ng-repeat="archive in archiveList">
-                        <a ng-href='#/articles-archive/{{archive.Year}}/{{archive.Month}}'>{{archive.MonthString}} {{archive.Year}}({{archive.ArticleCount}})</a>
-                        <br />
-                    </span>
+                    <div class="archive-container" id="divArchiveContainer" ng-repeat="archive in archiveList" >
+                        <div class="article-archive-month" ng-click="Go(archive.Year, archive.Month)">
+                            {{archive.MonthString}} {{archive.Year}}
+                        </div>
+                        <div class="article-archive-count" ng-click="Go(archive.Year, archive.Month)">
+                            {{archive.ArticleCount}}
+                        </div>
+                    </div>
                 </div>
             </td>
         </tr>
