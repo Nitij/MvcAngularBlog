@@ -1,14 +1,3 @@
 ﻿<div id="container">
-    <div ng-repeat="article in articles">
-        <span style="font-weight: 700;">
-            <a class="article-list-title" ng-href='#/articles-detail/{{article.ID}}'>{{article.Title}}</a>
-        </span><br />
-        <span class="article-list-date" >{{GetDateTime(article.CreateDate)}}</span>
-        <br />
-        {{article.Description}}
-        <br />
-        <a class="article-read-more-button" ng-href='#/articles-detail/{{article.ID}}'>Read More</a>
-        <br />
-        <br />
-    </div>
+    <div article-list-item ng-repeat="article in articles"></div>
 </div>

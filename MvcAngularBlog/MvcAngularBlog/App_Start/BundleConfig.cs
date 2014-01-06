@@ -16,6 +16,7 @@ namespace MvcAngularBlog
                 "~/Angular_Scripts/BlogApp.js"
                 , "~/Angular_Scripts/Routes.js"
                 , "~/Angular_Scripts/Services.js"
+                , "~/Angular_Scripts/Directives/ArticleDirectives.js"
                 , "~/Angular_Scripts/Controllers/ArticleController.js"
                 , "~/Angular_Scripts/Controllers/UserController.js"
                 , "~/Angular_Scripts/Controllers/TagsController.js"

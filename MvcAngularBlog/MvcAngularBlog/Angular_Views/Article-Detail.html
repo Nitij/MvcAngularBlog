@@ -3,14 +3,10 @@
         <table>
             <tr>
                 <td>
-                    <span class="article-title">{{article.Title}}</span>
+                    <div article-title></div>
                 </td>
                 <td>
-                    <div id="divdateTime" class="article-date-container">
-                        <div id="divMonth" class="article-month-div">{{GetMonthStringFromRawDate(article.CreateDate)}}</div>
-                        <div id="divDate" class="article-date-div">{{GetDayFromRawDate(article.CreateDate)}}</div>
-                        <div id="divYear" class="article-year-div">{{GetYearFromRawDate(article.CreateDate)}}</div>
-                    </div>
+                    <div article-detail-datetime id="divdateTime" class="article-date-container"></div>
                 </td>
             </tr>
             <tr>

@@ -23,11 +23,7 @@
     
     <div id="divManageArticles" ng-controller="UserCtrl">
         <table>
-            <tr ng-repeat="article in articles">
-                <td>{{article.Title}}</td>
-                <td><a href="" ng-click="EditArticle(article.ID)">Edit</a></td>
-                <td><a href="" ng-click="DeleteArticle(article.ID)">Delete</a></td>
-            </tr>
+            <tr user-article-list-item ng-repeat="article in articles"></tr>
         </table>
         <br />
         <a href="" ng-click="CreateNewArticle()">Create New Article</a>
