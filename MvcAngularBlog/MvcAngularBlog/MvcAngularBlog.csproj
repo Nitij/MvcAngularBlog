@@ -188,6 +188,12 @@
     <Content Include="Angular_Scripts\Controllers\ArchiveController.js" />
     <Content Include="Angular_Scripts\Controllers\ArticleArchiveController.js" />
     <Content Include="Angular_Scripts\Directives\ArticleDirectives.js" />
+    <Content Include="Angular_Scripts\Services\ArchiveService.js" />
+    <Content Include="Angular_Scripts\Services\BlogArticleService.js" />
+    <Content Include="Angular_Scripts\Services\BlogCommentsService.js" />
+    <Content Include="Angular_Scripts\Services\BlogUserService.js" />
+    <Content Include="Angular_Scripts\Services\HelperService.js" />
+    <Content Include="Angular_Scripts\Services\TagService.js" />
     <Content Include="Angular_Views\Articles.html" />
     <Content Include="Angular_Views\Article-Detail.html" />
     <Content Include="Angular_Views\Article-Tag.html" />
@@ -256,7 +262,6 @@
     <Content Include="Angular_Scripts\Controllers\TagsController.js" />
     <Content Include="Angular_Scripts\Controllers\UserController.js" />
     <Content Include="Angular_Scripts\Routes.js" />
-    <Content Include="Angular_Scripts\Services.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />

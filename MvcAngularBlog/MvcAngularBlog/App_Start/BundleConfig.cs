@@ -15,7 +15,12 @@ namespace MvcAngularBlog
             bundles.Add(new ScriptBundle("~/bundles/angularScripts").Include(
                 "~/Angular_Scripts/BlogApp.js"
                 , "~/Angular_Scripts/Routes.js"
-                , "~/Angular_Scripts/Services.js"
+                , "~/Angular_Scripts/Services/ArchiveService.js"
+                , "~/Angular_Scripts/Services/BlogArticleService.js"
+                , "~/Angular_Scripts/Services/BlogCommentsService.js"
+                , "~/Angular_Scripts/Services/BlogUserService.js"
+                , "~/Angular_Scripts/Services/HelperService.js"
+                , "~/Angular_Scripts/Services/TagService.js"
                 , "~/Angular_Scripts/Directives/ArticleDirectives.js"
                 , "~/Angular_Scripts/Controllers/ArticleController.js"
                 , "~/Angular_Scripts/Controllers/UserController.js"
