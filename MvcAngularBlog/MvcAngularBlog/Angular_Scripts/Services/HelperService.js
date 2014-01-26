@@ -109,7 +109,6 @@ blogApp.factory("HelperService", function () {
         GetMonthFromRawDate: GetMonthFromRawDateFunc,
         GetMonthStringFromRawDate: GetMonthStringFromRawDateFunc,
         GetYearFromRawDate: GetYearFromRawDateFunc,
-        GetYearFromRawDate: GetYearFromRawDateFunc,
         GetDayFromRawDate: GetDayFromRawDateFunc
     };
 });

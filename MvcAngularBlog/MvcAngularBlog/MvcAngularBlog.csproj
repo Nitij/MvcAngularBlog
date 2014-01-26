@@ -262,6 +262,9 @@
     <Content Include="Angular_Scripts\Controllers\TagsController.js" />
     <Content Include="Angular_Scripts\Controllers\UserController.js" />
     <Content Include="Angular_Scripts\Routes.js" />
+    <Content Include="Scripts\angular-route.js" />
+    <Content Include="Scripts\angular-sanitize.js" />
+    <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -277,6 +280,8 @@
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Tests\ServiceSpecRunner.html" />
+    <Content Include="Tests\spec\HelperServiceSpec.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -320,6 +325,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Tests\lib\" />
+    <Folder Include="Tests\src\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

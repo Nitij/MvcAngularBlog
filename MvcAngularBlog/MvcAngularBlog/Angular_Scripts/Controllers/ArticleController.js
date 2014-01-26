@@ -43,13 +43,15 @@ blogApp.controller('ArticleCtrl', ['$scope', '$routeParams', '$sce', 'BlogArticl
                     });
                 ClearCommentData();
             });
-
-            function ClearCommentData() {
-                $scope.name = "";
-                $scope.email = "";
-                $scope.comment = "";
-            }
         };
+
+        //Clears the comment data
+        function ClearCommentData() {
+            $scope.name = "";
+            $scope.email = "";
+            $scope.comment = "";
+        }
+
         //get the article by its ID from the 'BlogDataService' service that we have injected
         //into this controller
         BlogArticleService.GetData(BlogArticleService.OperationType.GetArticleById, $scope.articleId).
