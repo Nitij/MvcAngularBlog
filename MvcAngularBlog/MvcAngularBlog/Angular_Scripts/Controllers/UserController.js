@@ -25,11 +25,14 @@ blogApp.controller('UserCtrl', ['$scope', '$routeParams', 'BlogArticleService', 
     function EditArticleFunc(articleId) {
         var myNiceEditor = nicEditors.findEditor('txtArticleEditor');
         $scope.opType = "Edit";
-        $scope.editMode = true;
+        
         BlogArticleService.GetData(BlogArticleService.OperationType.GetArticleById, articleId).
         then(function (args) {
-            $scope.currentArticle = args.data[0];
+            debugger;
+
+            $scope.currentArticle = args.data;
             myNiceEditor.setContent($scope.currentArticle.Data);
+            $scope.editMode = true;
         });        
     }
 

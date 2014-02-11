@@ -1,5 +1,5 @@
 ﻿;
-//Service for Archive
+//Service for Archives
 blogApp.factory("ArchiveService", function ($http, $q, $templateCache) {
     var OpType = {
         GetArticleDates: 1,

@@ -23,8 +23,7 @@ blogApp.factory("BlogArticleService", function ($http, $q, $templateCache) {
         else if (operation === OpType.GetArticleById) {
             deferred.resolve($http({
                 method: 'GET',
-                url: '/api/BlogArticles/' + data,
-                cache: $templateCache
+                url: '/api/BlogArticles/' + data
             }));
             return deferred.promise;
         }

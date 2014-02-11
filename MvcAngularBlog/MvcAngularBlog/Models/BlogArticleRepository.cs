@@ -59,14 +59,14 @@ namespace MvcAngularBlog.Models
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public IEnumerable<BlogArticle> GetArticle(Int32 id)
+        public BlogArticle GetArticle(Int32 id)
         {
-            List<BlogArticle> articles = new List<BlogArticle>();
+            BlogArticle article = new BlogArticle();
             operationParams.Clear();
             operationParams.Add("id", id);
-            articles.Add(dataController.ExecuteOperation(OperationType.ReadArticleById, operationParams) as BlogArticle);
+            article = dataController.ExecuteOperation(OperationType.ReadArticleById, operationParams) as BlogArticle;
 
-            return articles;
+            return article;
         }
 
         /// <summary>

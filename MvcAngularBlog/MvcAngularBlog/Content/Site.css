@@ -63,11 +63,12 @@ body {
 }
 
 .article-tag-name {
+    color:white;
     cursor: pointer;
     display:inline-block;
     text-align:center;
     padding:5px;
-    width:120px;
+    width:160px;
     margin-right:-10px;
     /*border-radius*/
     border-top-left-radius:10px;

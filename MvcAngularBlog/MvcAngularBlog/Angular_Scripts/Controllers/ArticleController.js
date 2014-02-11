@@ -15,7 +15,7 @@ blogApp.controller('ArticleCtrl', ['$scope', '$routeParams', '$sce', 'BlogArticl
         $scope.AddNewComment = function () {
             var currentdate = new Date(),
                 datetime = currentdate.getFullYear() + "-"
-                    + currentdate.getMonth() + "-"
+                    + (currentdate.getMonth() + 1) + "-"
                     + currentdate.getDate() + " "
                     + currentdate.getHours() + ":"
                     + currentdate.getMinutes() + ":"
@@ -55,7 +55,7 @@ blogApp.controller('ArticleCtrl', ['$scope', '$routeParams', '$sce', 'BlogArticl
         //get the article by its ID from the 'BlogDataService' service that we have injected
         //into this controller
         BlogArticleService.GetData(BlogArticleService.OperationType.GetArticleById, $scope.articleId).
-            then(function (args) { $scope.article = args.data[0]; });
+            then(function (args) { $scope.article = args.data; });
 
         //get all the comments for this article here
         BlogCommentsService.Execute(BlogCommentsService.OperationType.GetAllComments, $scope.articleId).

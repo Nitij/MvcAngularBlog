@@ -11,7 +11,7 @@ namespace MvcAngularBlog.Models
     interface IBlogArticle
     {
         IEnumerable<BlogArticle> GetAllArticles();
-        IEnumerable<BlogArticle> GetArticle(Int32 id);
+        BlogArticle GetArticle(Int32 id);
         IEnumerable<BlogArticle> GetArticlesByUser();
         IEnumerable<DateTime> GetArticleDates();
         IEnumerable<BlogArticle> GetArticlesByDateRange(ArchiveDate archiveDate);

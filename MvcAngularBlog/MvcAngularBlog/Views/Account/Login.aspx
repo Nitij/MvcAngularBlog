@@ -46,7 +46,3 @@
         <%: Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl }) %>
     </section>
 </asp:Content>
-
-<asp:Content ID="scriptsContent" ContentPlaceHolderID="ScriptsSection" runat="server">
-    <%: Scripts.Render("~/bundles/jqueryval") %>
-</asp:Content>

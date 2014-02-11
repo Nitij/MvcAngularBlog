@@ -35,7 +35,10 @@ namespace Shared
                 {GetAllTags, OperationText.GetAllTags},
                 {GetArticlesByTagName, OperationText.GetArticlesByTagName},
                 {GetArticleDates, OperationText.GetArticleDates},
-				{GetArticlesByDateRange, OperationText.GetArticlesByDateRange}
+				{GetArticlesByDateRange, OperationText.GetArticlesByDateRange},
+                {GetAllCommentIDsByArticleID, OperationText.GetAllCommentIDsByArticleID},
+                {DeleteArticleCommentRelationByArticleId, OperationText.DeleteArticleCommentRelationByArticleId},
+                {DeleteCommentsByIds, OperationText.DeleteCommentsByIds}
             };
 
         public const String ReadAllArticles = "ReadAllArticles";
@@ -59,6 +62,10 @@ namespace Shared
         public const String GetArticlesByTagName = "GetArticlesByTagName";
         public const String GetArticleDates = "GetArticleDates";
         public const String GetArticlesByDateRange = "GetArticlesByDateRange";
+        public const String GetAllCommentIDsByArticleID = "GetAllCommentIDsByArticleID";
+        public const String DeleteArticleCommentRelationByArticleId = "DeleteArticleCommentRelationByArticleId";
+        public const String DeleteCommentsByIds = "DeleteCommentsByIds";  
+         
     }
 
     /// <summary>
@@ -201,5 +208,20 @@ namespace Shared
                                                 " INNER JOIN tblUserArticle ua on ua.ArticleID = a.ID" +
                                                 " INNER JOIN UserProfile u on u.UserId = ua.UserID" +
                                                 " WHERE (a.Create_Date >= @startDate AND a.Create_Date < @endDate)";
+
+        /// <summary>
+        /// Get All Comment IDs ByArticle ID
+        /// </summary>
+        public const String GetAllCommentIDsByArticleID = "SELECT Comment_Id FROM tbl_ArticleComment WHERE Article_Id = @articleId";
+
+        /// <summary>
+        /// Delete Article Comment Relation By ArticleId
+        /// </summary>
+        public const String DeleteArticleCommentRelationByArticleId = "DELETE FROM tbl_ArticleComment WHERE Article_Id = @articleId";
+
+        /// <summary>
+        /// Delete Comments By Ids
+        /// </summary>
+        public const String DeleteCommentsByIds = "DELETE FROM tbl_Comments WHERE ID IN ({0})";
     }
 }

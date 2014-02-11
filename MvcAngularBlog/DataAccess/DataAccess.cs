@@ -204,30 +204,13 @@ namespace DataAccess
         }
 
         /// <summary>
-        /// Removes all article-tag rows for an article
-        /// </summary>
-        /// <param name="articleId"></param>
-        /// <returns></returns>
-        public Int32 RemoveArticleTagRelation(Int32 articleId)
-        {
-            Int32 returnData = 0;
-            SqlCommand command = GetCommand(OperationType.RemoveArticleTagRelationByArticleID);
-
-            command.Parameters.Add(GetParameter("@articleId", articleId, DbType.Int32));
-            returnData = command.ExecuteNonQuery();
-            CloseConnection(command.Connection);
-
-            return returnData;
-        }
-
-        /// <summary>
         /// Set tags for the specified article
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public Int32 SetArticleTags(Dictionary<String, Object> data)
+        public String SetArticleTags(Dictionary<String, Object> data)
         {
-            Int32 returnData = 0;
+            String returnData = String.Empty; ;
             SqlDataReader dataReader;
             List<String> tagList = new List<String>();
             SqlCommand command, selectTagCommand;
@@ -236,15 +219,21 @@ namespace DataAccess
 
             //we dont want to insert empty tags
             if (tags == ",") tags = String.Empty;
+            returnData = tags;
 
             //First we need to remove all tags for the given article ID
-            RemoveArticleTagRelation(articleId);
+            #region Remove all the article-tag relaton rows
+            command = GetCommand(OperationType.RemoveArticleTagRelationByArticleID);
+            command.Parameters.Add(GetParameter("@articleId", articleId, DbType.Int32));
+            command.ExecuteNonQuery();
+            CloseConnection(command.Connection);
+            #endregion Remove all the article-tag relaton rows
 
             //Now we need to add any tag which does not already exist in the DB
             //code to convert comma separated string to list
             //http://stackoverflow.com/questions/910119/how-to-create-a-listt-from-a-comma-separated-string
             if (tags.Length > 0)
-                tagList.AddRange(tags.Split(',').Select(i => i));
+                tagList = GetStringListFromStringItems(tags);
 
             //make sure we have distinct tags
             tagList = tagList.Distinct().ToList();
@@ -274,7 +263,6 @@ namespace DataAccess
                 command.Parameters.Add(GetParameter("@tagName", str, DbType.String));
                 command.Parameters.Add(GetParameter("@articleId", articleId, DbType.Int32));
                 command.ExecuteNonQuery();
-                returnData++;
                 command.Parameters.Clear();
             }
 
@@ -336,7 +324,7 @@ namespace DataAccess
             data.Add("articleId", articleId);
 
             //now lets update the tags
-            SetArticleTags(data);
+            blogArticle.Tags = SetArticleTags(data);
 
             return blogArticle;
         }
@@ -489,25 +477,68 @@ namespace DataAccess
         {
             Int32 returnData;
             SqlCommand command;
+            SqlDataReader dataReader;
             Int32 id = Convert.ToInt32(data["articleId"]);
+            List<Int32> commentIDs = new List<Int32>();
 
+            //Delete user-article relation
+            #region Delete user-article relation
             command = GetCommand(OperationType.DeleteArticleUserRelation);
             command.Parameters.Add(GetParameter("@articleId", id, DbType.Int32));
             returnData = command.ExecuteNonQuery();
             CloseConnection(command.Connection);
+            #endregion Delete user-article relation
 
             //Now we need to remove all the article-tag relaton rows
-            RemoveArticleTagRelation(id);
+            #region Remove all the article-tag relaton rows
+            command = GetCommand(OperationType.RemoveArticleTagRelationByArticleID);
+            command.Parameters.Add(GetParameter("@articleId", id, DbType.Int32));
+            returnData = command.ExecuteNonQuery();
+            CloseConnection(command.Connection);
+            #endregion Remove all the article-tag relaton rows
 
-            //only proceed if the article-user relation record was deleted
-            if (returnData > 0)
+            #region Remove all comments for this article
+            //First lets get all the comment ids for this article
+            command = GetCommand(OperationType.GetAllCommentIDsByArticleID);
+            command.Parameters.Add(GetParameter("@articleId", id, DbType.Int32));
+            dataReader = command.ExecuteReader();
+            while (dataReader.Read())
             {
-                command = GetCommand(OperationType.DeleteArticle);
-                command.Parameters.Add(GetParameter("@articleId", id, DbType.Int32));
-                returnData = command.ExecuteNonQuery();
+                commentIDs.Add(Convert.ToInt32(dataReader["Comment_Id"]));
+            }
+            CloseConnection(command.Connection);
+
+            //Now Delete all the article-comment relation rows
+            command = GetCommand(OperationType.DeleteArticleCommentRelationByArticleId);
+            command.Parameters.Add(GetParameter("@articleId", id, DbType.Int32));
+            command.ExecuteNonQuery();
+            CloseConnection(command.Connection);
+
+            if (commentIDs.Count > 0)
+            {
+                //Now delete all the comment rows
+                command = GetCommand(OperationType.DeleteCommentsByIds);
+                var parameters = new String[commentIDs.Count];
+                for (Int32 i = 0; i < commentIDs.Count; i++)
+                {
+                    parameters[i] = String.Format("@{0}{1}", "commentID", i);
+                    command.Parameters.AddWithValue(parameters[i], commentIDs[i]);
+                }
+
+                command.CommandText = String.Format(OperationType.Map[OperationType.DeleteCommentsByIds], String.Join(", ", parameters));
+                command.ExecuteNonQuery();
+                CloseConnection(command.Connection);
             }
 
+            #endregion Remove all comments for this article
+
+            #region Remove all the articles
+            command = GetCommand(OperationType.DeleteArticle);
+            command.Parameters.Add(GetParameter("@articleId", id, DbType.Int32));
+            returnData = command.ExecuteNonQuery();
             CloseConnection(command.Connection);
+            #endregion Remove all the articles
+
             return returnData;
         }
 
@@ -596,6 +627,18 @@ namespace DataAccess
         #endregion CRUD
 
         #region Helper Methods
+
+        /// <summary>
+        /// Converts a comma separated strings to List of String Items
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        private List<String> GetStringListFromStringItems(String str)
+        {
+            List<String> strList = new List<String>();
+            strList.AddRange(str.Split(',').Select(i => i));
+            return strList;
+        }
 
         /// <summary>
         /// Returns new ArticleComment object with the passed parameters

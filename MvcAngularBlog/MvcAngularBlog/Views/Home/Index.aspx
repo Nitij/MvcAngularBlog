@@ -8,7 +8,7 @@
             <td style="width: 70%;vertical-align:top;">
                 <div ng-view></div>
             </td>
-            <td style="width: 70%; vertical-align: top;">
+            <td style="width: 30%; vertical-align: top;">
                 <div ng-controller="TagsCtrl">
                     <span style="font-weight: 800">Tags: </span>
                     <br />

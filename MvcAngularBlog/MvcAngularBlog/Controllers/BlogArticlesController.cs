@@ -31,7 +31,7 @@ namespace MvcAngularBlog.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public IEnumerable<BlogArticle> GetArticleByID(Int32 id)
+        public BlogArticle GetArticleByID(Int32 id)
         {
             return blogArticleRepository.GetArticle(id);
         }
