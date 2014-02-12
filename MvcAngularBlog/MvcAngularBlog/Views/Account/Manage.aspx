@@ -32,14 +32,14 @@
         <br />
         <div id="divEditArticle" style="display: {{GetEditMode()}};">
             <label for="txtArticleTitle">Title: </label>
-            <input type="text" id="txtArticleTitle" ng-model="currentArticle.Title" />
+            <input type="text" id="txtArticleTitle" ng-model="currentArticle.Title" class="edit-title"/>
             <br />
-            <label for="txtDescription">Description: </label>
-            <input type="text" id="txtDescription" ng-model="currentArticle.Description" />
+            <label for="txtDescription">Description: </label>            
+            <input type="text" id="txtDescription" ng-model="currentArticle.Description" class="edit-description"/>
             <textarea style="width: 700px; height: 500px;" id="txtArticleEditor"></textarea>
             <br />
-            <lable for="txtTags">Tags: </lable>
-            <input type="text" id="txtTags" ng-model="currentArticle.Tags"/>
+            <label for="txtTags">Tags: </label>
+            <input type="text" id="txtTags" ng-model="currentArticle.Tags" class="edit-tags"/>
             <br />
             <a href="" ng-click="SaveArticle()">Save</a>
             <a href="" ng-click="CloseArticleEditing()">Done Editing</a>

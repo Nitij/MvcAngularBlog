@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Web;
+using System.Transactions;
 
 using Shared;
 using Shared.Models;
@@ -120,30 +121,36 @@ namespace DataAccess
         /// <returns></returns>
         public Int32 AddNewComment(Dictionary<String, Object> data)
         {
-            Int32 returnData, commentId, articleId;
-            SqlCommand command = GetCommand(OperationType.AddNewComment);
+            Int32 returnData, commentId, articleId;            
             String name = (data["name"]).ToString();
             String email = (data["email"]).ToString();
             String comment = (data["comment"]).ToString();
             DateTime createDate = Convert.ToDateTime(data["createDate"]);
 
-            command.Parameters.Add(GetParameter("@name", name, DbType.String));
-            command.Parameters.Add(GetParameter("@email", email, DbType.String));
-            command.Parameters.Add(GetParameter("@comment", comment, DbType.String));
-            command.Parameters.Add(GetParameter("@createDate", createDate, DbType.DateTime));
+            using (TransactionScope scope = new TransactionScope())
+            {
+                SqlCommand command = GetCommand(OperationType.AddNewComment);
+                command.Parameters.Add(GetParameter("@name", name, DbType.String));
+                command.Parameters.Add(GetParameter("@email", email, DbType.String));
+                command.Parameters.Add(GetParameter("@comment", comment, DbType.String));
+                command.Parameters.Add(GetParameter("@createDate", createDate, DbType.DateTime));
 
-            commentId = Convert.ToInt32(command.ExecuteScalar());
-            CloseConnection(command.Connection);
-            //new add a new record into the Article-Comment relationship table
-            articleId = Convert.ToInt32(data["articleId"]);
-            command = GetCommand(OperationType.AddCommentArticleRelation);
+                commentId = Convert.ToInt32(command.ExecuteScalar());
+                CloseConnection(command.Connection);
+                //new add a new record into the Article-Comment relationship table
+                articleId = Convert.ToInt32(data["articleId"]);
+                command = GetCommand(OperationType.AddCommentArticleRelation);
 
-            command.Parameters.Add(GetParameter("@articleId", articleId, DbType.Int32));
-            command.Parameters.Add(GetParameter("@commentId", commentId, DbType.Int32));
+                command.Parameters.Add(GetParameter("@articleId", articleId, DbType.Int32));
+                command.Parameters.Add(GetParameter("@commentId", commentId, DbType.Int32));
 
-            returnData = command.ExecuteNonQuery();
+                returnData = command.ExecuteNonQuery();
 
-            CloseConnection(command.Connection);
+                CloseConnection(command.Connection);
+
+                //Finally complete the transaction
+                scope.Complete();
+            }
             return returnData;
         }
 
@@ -221,52 +228,58 @@ namespace DataAccess
             if (tags == ",") tags = String.Empty;
             returnData = tags;
 
-            //First we need to remove all tags for the given article ID
-            #region Remove all the article-tag relaton rows
-            command = GetCommand(OperationType.RemoveArticleTagRelationByArticleID);
-            command.Parameters.Add(GetParameter("@articleId", articleId, DbType.Int32));
-            command.ExecuteNonQuery();
-            CloseConnection(command.Connection);
-            #endregion Remove all the article-tag relaton rows
-
-            //Now we need to add any tag which does not already exist in the DB
-            //code to convert comma separated string to list
-            //http://stackoverflow.com/questions/910119/how-to-create-a-listt-from-a-comma-separated-string
-            if (tags.Length > 0)
-                tagList = GetStringListFromStringItems(tags);
-
-            //make sure we have distinct tags
-            tagList = tagList.Distinct().ToList();
-            selectTagCommand = GetCommand(OperationType.SelectTag);
-            command = GetCommand(OperationType.AddNewTag);
-            foreach (String str in tagList)
+            using (TransactionScope scope = new TransactionScope())
             {
-                selectTagCommand.Parameters.Add(GetParameter("@tagName", str, DbType.String));
-                dataReader = selectTagCommand.ExecuteReader();
-                //if the tag does not exist in the DB then add the tag
-                if (!dataReader.Read())
+                //First we need to remove all tags for the given article ID
+                #region Remove all the article-tag relaton rows
+                command = GetCommand(OperationType.RemoveArticleTagRelationByArticleID);
+                command.Parameters.Add(GetParameter("@articleId", articleId, DbType.Int32));
+                command.ExecuteNonQuery();
+                CloseConnection(command.Connection);
+                #endregion Remove all the article-tag relaton rows
+
+                //Now we need to add any tag which does not already exist in the DB
+                //code to convert comma separated string to list
+                //http://stackoverflow.com/questions/910119/how-to-create-a-listt-from-a-comma-separated-string
+                if (tags.Length > 0)
+                    tagList = GetStringListFromStringItems(tags);
+
+                //make sure we have distinct tags
+                tagList = tagList.Distinct().ToList();
+                selectTagCommand = GetCommand(OperationType.SelectTag);
+                command = GetCommand(OperationType.AddNewTag);
+                foreach (String str in tagList)
+                {
+                    selectTagCommand.Parameters.Add(GetParameter("@tagName", str, DbType.String));
+                    dataReader = selectTagCommand.ExecuteReader();
+                    //if the tag does not exist in the DB then add the tag
+                    if (!dataReader.Read())
+                    {
+                        command.Parameters.Add(GetParameter("@tagName", str, DbType.String));
+                        command.ExecuteNonQuery();
+                        command.Parameters.Clear();
+                    }
+                    dataReader.Close();
+                    selectTagCommand.Parameters.Clear();
+                }
+                CloseConnection(command.Connection);
+                CloseConnection(selectTagCommand.Connection);
+
+                //Now set the Article-Tag relationship for each tag passed
+                command = GetCommand(OperationType.AddArticleTagRelation);
+                foreach (String str in tagList)
                 {
                     command.Parameters.Add(GetParameter("@tagName", str, DbType.String));
+                    command.Parameters.Add(GetParameter("@articleId", articleId, DbType.Int32));
                     command.ExecuteNonQuery();
                     command.Parameters.Clear();
                 }
-                dataReader.Close();
-                selectTagCommand.Parameters.Clear();
-            }
-            CloseConnection(command.Connection);
-            CloseConnection(selectTagCommand.Connection);
 
-            //Now set the Article-Tag relationship for each tag passed
-            command = GetCommand(OperationType.AddArticleTagRelation);
-            foreach (String str in tagList)
-            {
-                command.Parameters.Add(GetParameter("@tagName", str, DbType.String));
-                command.Parameters.Add(GetParameter("@articleId", articleId, DbType.Int32));
-                command.ExecuteNonQuery();
-                command.Parameters.Clear();
-            }
+                CloseConnection(command.Connection);
 
-            CloseConnection(command.Connection);
+                //Finally complete the transaction
+                scope.Complete();
+            }
             return returnData;
         }
 
@@ -278,8 +291,7 @@ namespace DataAccess
         public BlogArticle AddNewArticle(Dictionary<String, Object> data)
         {
             BlogArticle blogArticle;
-            Int32 articleId, userId;
-            SqlCommand command = GetCommand(OperationType.AddNewArticle);
+            Int32 articleId, userId;            
             String title = (data["title"]).ToString();
             String description = (data["description"]).ToString();
             String articleData = (data["data"]).ToString();
@@ -293,38 +305,44 @@ namespace DataAccess
                 CreateDate = createDate,
                 UserName = userName
             };
+            using (TransactionScope scope = new TransactionScope())
+            {
+                SqlCommand command = GetCommand(OperationType.AddNewArticle);
+                command.Parameters.Add(GetParameter("@title", title, DbType.String));
+                command.Parameters.Add(GetParameter("@description", description, DbType.String));
+                command.Parameters.Add(GetParameter("@data", articleData, DbType.String));
+                command.Parameters.Add(GetParameter("@createDate", createDate, DbType.DateTime));
 
-            command.Parameters.Add(GetParameter("@title", title, DbType.String));
-            command.Parameters.Add(GetParameter("@description", description, DbType.String));
-            command.Parameters.Add(GetParameter("@data", articleData, DbType.String));
-            command.Parameters.Add(GetParameter("@createDate", createDate, DbType.DateTime));
+                //get our new article's id now
+                articleId = Convert.ToInt32(command.ExecuteScalar());
+                CloseConnection(command.Connection);
+                blogArticle.ID = articleId;
 
-            //get our new article's id now
-            articleId = Convert.ToInt32(command.ExecuteScalar());
-            CloseConnection(command.Connection);
-            blogArticle.ID = articleId;
+                //now lets get the user id
+                command = GetCommand(OperationType.GetUserIdByUserName);
+                command.Parameters.Add(GetParameter("@userName", userName, DbType.String));
+                userId = Convert.ToInt32(command.ExecuteScalar());
+                CloseConnection(command.Connection);
+                blogArticle.UserID = userId;
 
-            //now lets get the user id
-            command = GetCommand(OperationType.GetUserIdByUserName);
-            command.Parameters.Add(GetParameter("@userName", userName, DbType.String));
-            userId = Convert.ToInt32(command.ExecuteScalar());
-            CloseConnection(command.Connection);
-            blogArticle.UserID = userId;
+                //new add a new record into the Article-User relationship table
+                command = GetCommand(OperationType.AddArticleUserRelation);
+                command.Parameters.Add(GetParameter("@userId", userId, DbType.Int32));
+                command.Parameters.Add(GetParameter("@articleId", articleId, DbType.Int32));
+                command.ExecuteNonQuery();
 
-            //new add a new record into the Article-User relationship table
-            command = GetCommand(OperationType.AddArticleUserRelation);
-            command.Parameters.Add(GetParameter("@userId", userId, DbType.Int32));
-            command.Parameters.Add(GetParameter("@articleId", articleId, DbType.Int32));
-            command.ExecuteNonQuery();
+                //we got this far so this means everything is good to go
+                CloseConnection(command.Connection);
 
-            //we got this far so this means everything is good to go
-            CloseConnection(command.Connection);
+                //add the new article Id to the data dictionary
+                data.Add("articleId", articleId);
 
-            //add the new article Id to the data dictionary
-            data.Add("articleId", articleId);
+                //now lets update the tags
+                blogArticle.Tags = SetArticleTags(data);
 
-            //now lets update the tags
-            blogArticle.Tags = SetArticleTags(data);
+                //Finally complete the transaction
+                scope.Complete();
+            }
 
             return blogArticle;
         }
@@ -481,63 +499,69 @@ namespace DataAccess
             Int32 id = Convert.ToInt32(data["articleId"]);
             List<Int32> commentIDs = new List<Int32>();
 
-            //Delete user-article relation
-            #region Delete user-article relation
-            command = GetCommand(OperationType.DeleteArticleUserRelation);
-            command.Parameters.Add(GetParameter("@articleId", id, DbType.Int32));
-            returnData = command.ExecuteNonQuery();
-            CloseConnection(command.Connection);
-            #endregion Delete user-article relation
-
-            //Now we need to remove all the article-tag relaton rows
-            #region Remove all the article-tag relaton rows
-            command = GetCommand(OperationType.RemoveArticleTagRelationByArticleID);
-            command.Parameters.Add(GetParameter("@articleId", id, DbType.Int32));
-            returnData = command.ExecuteNonQuery();
-            CloseConnection(command.Connection);
-            #endregion Remove all the article-tag relaton rows
-
-            #region Remove all comments for this article
-            //First lets get all the comment ids for this article
-            command = GetCommand(OperationType.GetAllCommentIDsByArticleID);
-            command.Parameters.Add(GetParameter("@articleId", id, DbType.Int32));
-            dataReader = command.ExecuteReader();
-            while (dataReader.Read())
+            using (TransactionScope scope = new TransactionScope())
             {
-                commentIDs.Add(Convert.ToInt32(dataReader["Comment_Id"]));
-            }
-            CloseConnection(command.Connection);
+                //Delete user-article relation
+                #region Delete user-article relation
+                command = GetCommand(OperationType.DeleteArticleUserRelation);
+                command.Parameters.Add(GetParameter("@articleId", id, DbType.Int32));
+                returnData = command.ExecuteNonQuery();
+                CloseConnection(command.Connection);
+                #endregion Delete user-article relation
 
-            //Now Delete all the article-comment relation rows
-            command = GetCommand(OperationType.DeleteArticleCommentRelationByArticleId);
-            command.Parameters.Add(GetParameter("@articleId", id, DbType.Int32));
-            command.ExecuteNonQuery();
-            CloseConnection(command.Connection);
+                //Now we need to remove all the article-tag relaton rows
+                #region Remove all the article-tag relaton rows
+                command = GetCommand(OperationType.RemoveArticleTagRelationByArticleID);
+                command.Parameters.Add(GetParameter("@articleId", id, DbType.Int32));
+                returnData = command.ExecuteNonQuery();
+                CloseConnection(command.Connection);
+                #endregion Remove all the article-tag relaton rows
 
-            if (commentIDs.Count > 0)
-            {
-                //Now delete all the comment rows
-                command = GetCommand(OperationType.DeleteCommentsByIds);
-                var parameters = new String[commentIDs.Count];
-                for (Int32 i = 0; i < commentIDs.Count; i++)
+                #region Remove all comments for this article
+                //First lets get all the comment ids for this article
+                command = GetCommand(OperationType.GetAllCommentIDsByArticleID);
+                command.Parameters.Add(GetParameter("@articleId", id, DbType.Int32));
+                dataReader = command.ExecuteReader();
+                while (dataReader.Read())
                 {
-                    parameters[i] = String.Format("@{0}{1}", "commentID", i);
-                    command.Parameters.AddWithValue(parameters[i], commentIDs[i]);
+                    commentIDs.Add(Convert.ToInt32(dataReader["Comment_Id"]));
                 }
+                CloseConnection(command.Connection);
 
-                command.CommandText = String.Format(OperationType.Map[OperationType.DeleteCommentsByIds], String.Join(", ", parameters));
+                //Now Delete all the article-comment relation rows
+                command = GetCommand(OperationType.DeleteArticleCommentRelationByArticleId);
+                command.Parameters.Add(GetParameter("@articleId", id, DbType.Int32));
                 command.ExecuteNonQuery();
                 CloseConnection(command.Connection);
+
+                if (commentIDs.Count > 0)
+                {
+                    //Now delete all the comment rows
+                    command = GetCommand(OperationType.DeleteCommentsByIds);
+                    var parameters = new String[commentIDs.Count];
+                    for (Int32 i = 0; i < commentIDs.Count; i++)
+                    {
+                        parameters[i] = String.Format("@{0}{1}", "commentID", i);
+                        command.Parameters.AddWithValue(parameters[i], commentIDs[i]);
+                    }
+
+                    command.CommandText = String.Format(OperationType.Map[OperationType.DeleteCommentsByIds], String.Join(", ", parameters));
+                    command.ExecuteNonQuery();
+                    CloseConnection(command.Connection);
+                }
+
+                #endregion Remove all comments for this article
+
+                #region Remove all the articles
+                command = GetCommand(OperationType.DeleteArticle);
+                command.Parameters.Add(GetParameter("@articleId", id, DbType.Int32));
+                returnData = command.ExecuteNonQuery();
+                CloseConnection(command.Connection);
+                #endregion Remove all the articles
+
+                //Finally complete the transaction
+                scope.Complete();
             }
-
-            #endregion Remove all comments for this article
-
-            #region Remove all the articles
-            command = GetCommand(OperationType.DeleteArticle);
-            command.Parameters.Add(GetParameter("@articleId", id, DbType.Int32));
-            returnData = command.ExecuteNonQuery();
-            CloseConnection(command.Connection);
-            #endregion Remove all the articles
 
             return returnData;
         }
