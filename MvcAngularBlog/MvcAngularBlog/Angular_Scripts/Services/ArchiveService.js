@@ -1,6 +1,6 @@
 ﻿;
 //Service for Archives
-blogApp.factory("ArchiveService", function ($http, $q, $templateCache) {
+blogApp.factory("ArchiveService", ['$http', '$q', '$templateCache', function ($http, $q, $templateCache) {
     var OpType = {
         GetArticleDates: 1,
         GetArticlesByDateRange: 2
@@ -32,4 +32,4 @@ blogApp.factory("ArchiveService", function ($http, $q, $templateCache) {
         Execute: execute,
         OperationType: OpType
     };
-});
+}]);

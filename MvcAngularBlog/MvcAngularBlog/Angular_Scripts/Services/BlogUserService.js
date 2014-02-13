@@ -1,6 +1,6 @@
 ﻿;
 //Service for user
-blogApp.factory("BlogUserService", function ($http, $q, $templateCache) {
+blogApp.factory("BlogUserService", ['$http', '$q', '$templateCache', function ($http, $q, $templateCache) {
     var OpType = {
         GetCurrentUser: 1
     };
@@ -20,4 +20,4 @@ blogApp.factory("BlogUserService", function ($http, $q, $templateCache) {
         Execute: execute,
         OperationType: OpType
     };
-});
+}]);

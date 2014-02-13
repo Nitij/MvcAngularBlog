@@ -1,6 +1,6 @@
 ﻿;
 //Service for articles
-blogApp.factory("BlogArticleService", function ($http, $q, $templateCache) {
+blogApp.factory("BlogArticleService", ['$http', '$q', '$templateCache', function ($http, $q, $templateCache) {
     var OpType = {
         GetAllArticles: 1,
         GetArticleByTagName: 2,
@@ -44,8 +44,7 @@ blogApp.factory("BlogArticleService", function ($http, $q, $templateCache) {
                 url: '/api/UserArticles/',
                 data: JSON.stringify(data),
                 dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                cache: $templateCache
+                contentType: "application/json; charset=utf-8"
             }));
             return deferred.promise;
         }
@@ -55,16 +54,14 @@ blogApp.factory("BlogArticleService", function ($http, $q, $templateCache) {
                 url: '/api/UserArticles/',
                 data: JSON.stringify(data),
                 dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                cache: $templateCache
+                contentType: "application/json; charset=utf-8"
             }));
             return deferred.promise;
         }
         else if (operation === OpType.DeleteArticle) {
             deferred.resolve($http({
                 method: 'DELETE',
-                url: '/api/UserArticles/' + data,
-                cache: $templateCache
+                url: '/api/UserArticles/' + data
             }));
             return deferred.promise;
         }
@@ -75,4 +72,4 @@ blogApp.factory("BlogArticleService", function ($http, $q, $templateCache) {
         Execute: execute,
         OperationType: OpType
     };
-});
+}]);

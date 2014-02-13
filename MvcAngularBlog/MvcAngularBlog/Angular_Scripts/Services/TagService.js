@@ -1,6 +1,6 @@
 ﻿;
 //Service for Tags
-blogApp.factory("TagService", function ($http, $q, $templateCache) {
+blogApp.factory("TagService", ['$http', '$q', '$templateCache', function ($http, $q, $templateCache) {
     var OpType = {
         GetAllTags: 1,
         GetArticlesByTagName: 2
@@ -31,4 +31,4 @@ blogApp.factory("TagService", function ($http, $q, $templateCache) {
         Execute: execute,
         OperationType: OpType
     };
-});
+}]);
