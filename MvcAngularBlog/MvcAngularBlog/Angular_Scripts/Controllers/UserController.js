@@ -28,8 +28,6 @@ blogApp.controller('UserCtrl', ['$scope', '$routeParams', 'BlogArticleService', 
         
         BlogArticleService.GetData(BlogArticleService.OperationType.GetArticleById, articleId).
         then(function (args) {
-            debugger;
-
             $scope.currentArticle = args.data;
             myNiceEditor.setContent($scope.currentArticle.Data);
             $scope.editMode = true;
